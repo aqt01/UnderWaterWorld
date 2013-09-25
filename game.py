@@ -1,6 +1,6 @@
 import pygame
 from random import randrange
-
+	
 
 class Game:
 
@@ -14,18 +14,27 @@ class Game:
 		self.screen=pygame.display.set_mode( (800,600),0,32)
 		self.background = self.game.image.load(self.background_path).convert()
 
-	def init_Sharks(self, Shark_lst):
+	
+	def init_Sharks(self, Shark_lst,w,h):
 #		self.sharks_path = filename
 		
 #        if (orientation == 1): 		
-		
+		self.sharks_img_n = []
+		self.sharks_img_e = []
+		self.sharks_img_s = []
+		self.sharks_img_w = []
+		self.sharks_w = w
+		self.sharks_h = h
+		self.shark_area = pygame.Rect((0,0),(self.sharks_w,self.sharks_h))
+
 
 		for i in range(0,4):		
-			self.sharks_img_n = [ self.game.image.load(Shark_lst[0][i]).convert_alpha(self.background) ]
-			self.sharks_img_e = [self.game.image.load(Shark_lst[1][i]).convert_alpha(self.background)]
-			self.sharks_img_s = [self.game.image.load(Shark_lst[2][i]).convert_alpha(self.background)]
-			self.sharks_img_w = [self.game.image.load(Shark_lst[3][i]).convert_alpha(self.background) ]
-		self.Sharks_img = [list(self.sharks_img_n), list(self.sharks_img_e),list(self.sharks_img_s), list(self.sharks_img_w) ]
+			self.sharks_img_n.append(self.game.image.load(Shark_lst[0][i]).convert_alpha(self.background))
+			self.sharks_img_e.append( self.game.image.load(Shark_lst[1][i]).convert_alpha(self.background) )
+			self.sharks_img_s.append( self.game.image.load(Shark_lst[2][i]).convert_alpha(self.background) )
+			self.sharks_img_w.append( [self.game.image.load(Shark_lst[3][i]).convert_alpha(self.background) ] )
+
+		self.Sharks_img = [ list(self.sharks_img_n), list(self.sharks_img_e),list(self.sharks_img_s), list(self.sharks_img_w) ]
 
 		self.alpha =128
 #		self.sharks_cp.fill((255, 255, 255, self.alpha), None, pygame.BLEND_RGBA_MULT)
@@ -54,7 +63,7 @@ class Game:
 	
 	def draw(self):
 		for i in range(1,self.N_sharks) :
-			self.screen.blit(self.Sharks_img[0][0],(self.N_sharks_ListX[i], self.N_sharks_ListY[i] ) )
+			self.screen.blit( self.Sharks_img[0][0],(self.N_sharks_ListX[i], self.N_sharks_ListY[i] ), self.shark_area)
 		#pygame.Surface.blit( self.sharks_img (50,50))
 
 def main() :
@@ -72,8 +81,9 @@ def main() :
 #	Shark_lst = [ Sharks_movs_n for i in range(0,3) , Sharks_movs_e for i in range(0,3), Sharks_movs_s for i in range(0,3), Sharks_movs_w for i in range(0,3) ]
 	Shark_lst = [ list(Shark_movs_n) , list(Shark_movs_e), list(Shark_movs_s), list(Shark_movs_w) ]
 	
-	juego.init_Sharks( Shark_lst)
+	juego.init_Sharks( Shark_lst, 40,40)
 	juego.randNumbers()
+
 	while True:
 #    for event in pygame.event.get():
     #    if event.type == QUIT:
