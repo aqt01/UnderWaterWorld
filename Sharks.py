@@ -1,34 +1,43 @@
 import pygame
 from random import randrange
-	
+import threading
+
+
 
 class Sharks(threading.Thread):
-	
-	def __init__(self,shark_lst,pos,vel,genre,Type):
+	# recibe lista de tiburiones, posicion, velocidad y genero
+	def __init__(self,shark_lst,X,Y,vel,genre):
 #		self.Sharks_path = filename
 		#threading.Thread.__init__(self)
-		super(StoppableThread, self).__init__()
-        self._stop = threading.Event()
+		super(Sharks, self).__init__()
+        	self._stop = threading.Event()
 		self.shark_lst = shark_lst
-		self.X = pos[0]
-		self.Y = pos[1]
+		self.X = X
+		self.Y = Y
 		self.alive = True
 		self.vel = vel
-		self.mov_n = 0
+		self.mov_n = 0 # dos tipos de movimiento 
 		self.genre=genre
-		self.type=TWype
+		self.shark_img_curr = shark_lst[0][0]
 
 	def Mov(self):
+
+		""" OR = 0 : NORTE
+		    OR = 1 : ESTE 
+		    OR = 2 : SUR
+		    OR = 3 : OESTE 
+			"""
+		self.Or = randrange(4)
 		if (self.Or == 0):
 			self.Y += self.vel
 			if(self.mov_n==0):
 				self.shark_img_curr = self.shark_lst[0][0]
 				self.mov_n =1
 			elif (self.mov_n==1):
-				self.shark_img_curr = self.shark_lst[0][1]				self.mov_n=0
+				self.shark_img_curr = self.shark_lst[0][1]				
+				self.mov_n=0
 			elif (self.alive==0):
 				self.shark_img_curr = self.shark_lst[0][3]
-
 			elif(self.comer==1):
 				self.shark_img_curr = self.shark_lst[0][2]		
 			elif(self.Y>self.Y_max_limit):
@@ -41,7 +50,8 @@ class Sharks(threading.Thread):
 				self.shark_img_curr = self.shark_lst[1][0]
 				self.mov_n =1
 			elif (self.mov_n==1):
-				self.shark_img_curr = self.shark_lst[1][1]				self.mov_n=0
+				self.shark_img_curr = self.shark_lst[1][1]				
+				self.mov_n=0
 			elif (self.alive==0):
 				self.shark_img_curr = self.shark_lst[1][3]
 
@@ -57,7 +67,8 @@ class Sharks(threading.Thread):
 				self.shark_img_curr = self.shark_lst[2][0]
 				self.mov_n =1
 			elif (self.mov_n==1):
-				self.shark_img_curr = self.shark_lst[2][1]				self.mov_n=0
+				self.shark_img_curr = self.shark_lst[2][1]				
+				self.mov_n=0
 			elif (self.alive==0):
 				self.shark_img_curr = self.shark_lst[2][3]
 
@@ -74,7 +85,8 @@ class Sharks(threading.Thread):
 				self.shark_img_curr = self.shark_lst[3][0]
 				self.mov_n =1
 			elif (self.mov_n==1):
-				self.shark_img_curr = self.shark_lst[3][1]				self.mov_n=0
+				self.shark_img_curr = self.shark_lst[3][1]				
+				self.mov_n=0
 			elif (self.alive==0):
 				self.shark_img_curr = self.shark_lst[3][3]
 
@@ -83,16 +95,12 @@ class Sharks(threading.Thread):
 			elif(self.X<self.X_min_limit):
 				self.X=X_max_limit+4
 			
-		Draw()
-		Randorientation()
 		
 	def Draw(self):		
 		self.screen.blit( self.shark_img_curr,(self.X, self.Y ))
 	
-	
-
-	def Randorientation(self):	
-		self.Or = randrange(3)
+	def get_curr_img(self):
+		return self.shark_img_curr
 
 	def Colision(self,objeto):
 		if (objeto.type=="fish"):
@@ -117,8 +125,9 @@ class Sharks(threading.Thread):
 		 self._stop.set()
 
 	def run(self):
+		print "hola"
 		while True:
-			self.Mov();
+			self.Mov()
 
 				
 

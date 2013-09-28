@@ -2,19 +2,20 @@ import pygame
 from random import randrange
 import threading
 
-
 class Fishes(threading.Thread):
 
-	def __init__(self,shark_lst,pos,vel):
+	def __init__(self,fish_lst,X,Y,vel,genre):
 		threading.Thread.__init__(self)
 		self.fish_lst = fish_lst
-		self.X = pos[0]
-		self.Y = pos[1]
+		self.X = X
+		self.Y = Y
 		self.alive = True
 		self.vel = vel
 		self.mov_n = 0
 
 	def Mov(self):
+		
+		self.Or = randrange(4)
 		if (self.Or == 0):
 			self.Y += self.vel
 			if(self.mov_n==0):
@@ -89,32 +90,13 @@ class Fishes(threading.Thread):
 	def Draw(self):
 		self.screen.blit( self.fish_img_curr,(self.X, self.Y ))
 
-
+	def get_curr_img(self):
+		return self.fish_img_curr
 
 	def Randorientation(self):
 		self.Or = randrange(3)
 
 	def run(self):
 		while True:
-			self.Mov();
-										"""
-										self.Sharks_ListX = []
-										self.Sharks_ListY = []
-
-										self.N_fishes_ListX = []
-										self.N_fishes_ListY = []
-										print self.N_self.Sharks
-										for i in range (1,self.N_self.Sharks+1):
-											self.N_self.Sharks_ListX.append( randrange(800) )
-											for i in range (1,self.N_self.Sharks+1):
-												self.N_self.Sharks_ListY.append(randrange(600))
-												print self.N_self.Sharks_ListY[1]
-												"""
-
-												""" def Draw_Sharks(self):
-												for i in range(1,self.N_self.Sharks) :
-													self.screen.blit( self.Sharks_img[0][0],(self.N_self.Sharks_ListX[i], self.N_self.Sharks_ListY[i] ), self.Shark_area)
-													#pygame.Surface.blit( self.Sharks_img (50,50))
-													"""
-
+			self.Mov()
 
