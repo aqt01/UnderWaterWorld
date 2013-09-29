@@ -1,21 +1,96 @@
 import pygame
 import Fishes, Sharks
 import thread
-
+import time
 from random import randrange
 	
 
 class Game:
 	Sharks = []
 	Fishes = []
+<<<<<<< HEAD
+	Width = 800
+	Heigth = 600
+
+=======
 
 	Width = 800
 	Heigth = 600
 
+>>>>>>> e8af9c493a41215176a4fb405073446dae192741
 	def __init__(self, Shark_n, Fishes_n):
 		self.game = pygame
 		self.game.init()
 		self.background_path ="./Images/background.jpg"
+<<<<<<< HEAD
+		
+		self.screen=pygame.display.set_mode( (800,600),0,32)
+		self.background = self.game.image.load(self.background_path).convert()
+		
+		self.vel = 8
+
+		self.Sharks_img()
+		self.Fishes_img()
+
+		
+		self.alpha = 128
+		self.Sharks_spri = pygame.sprite.Group()
+		self.Fishes_spri = pygame.sprite.Group()		
+		self.Create_units(Shark_n,Fishes_n,self.vel)
+		self.Collect_sprites()
+
+		
+	# se carga el lote de imagenes
+
+	def Collect_sprites(self):
+		self.Sharks_spri.empty()
+		self.Fishes_spri.empty()
+
+		for i in range(self.Shark_n):	
+			if self.Sharks[i].alive:
+				self.Sharks[i].load_sprite(self.Sharks_spri,self.Fishes_spri)
+				self.Sharks_spri.add( self.Sharks[i].spri)
+
+
+		for i in range(self.Fishes_n):
+			if self.Fishes[i].alive:
+				self.Fishes[i].load_sprite(self.Sharks_spri,self.Fishes_spri)
+				self.Fishes_spri.add( self.Fishes[i].spri)
+		
+
+
+
+	def Create_units(self,Shark_n,Fishes_n,vel):
+		self.pos = []
+		self.vel = vel
+		self.Shark_n = Shark_n
+		self.Fishes_n = Fishes_n
+		self.Sharks = []
+		self.Fishes = []		
+		self.Sharks_sprites = []
+		self.Fishes_sprites = []
+
+		for i in range (Shark_n):
+			x = Sharks.Sharks( self.Retrieve_shark_lst(), randrange(self.Width), randrange(self.Heigth),self.vel,  randrange(2) )
+			self.Sharks.append (  x )
+		
+		for i in range (Fishes_n):
+			y = Fishes.Fishes(self.Retrieve_fish_lst(), randrange(self.Width),randrange(self.Heigth), self.vel, randrange(2))
+			self.Fishes.append(y)
+
+		self.Collect_sprites()
+
+		for i in range(Shark_n):
+			self.Sharks[i].start()
+
+		for i in range(Fishes_n):
+			self.Fishes[i].start()
+
+
+	# se crean los threads q representaran a los tiburones y peces
+
+	def Fishes_img(self):
+=======
 		self.screen=pygame.display.set_mode( (800,600),0,32)
 		self.background = self.game.image.load(self.background_path).convert()
 		self.vel = 3
@@ -86,8 +161,52 @@ class Game:
 
 	def Retrieve_fish_lst(self):
 		return self.Fishes_img
+>>>>>>> e8af9c493a41215176a4fb405073446dae192741
+
+		self.Fishes_path = "./Images/sprites/peces/hembra/"
+
+<<<<<<< HEAD
+		self.Fish_movs_n = [self.Fishes_path + "norte/mov1-norte-f.png", self.Fishes_path + "norte/mov2-norte-f.png",self.Fishes_path + "norte/eat-norte-f.png", self.Fishes_path + "norte/hit-norte-f.png"]
+		self.Fish_movs_s = [self.Fishes_path + "sur/mov1-sur-f.png", self.Fishes_path + "sur/mov2-sur-f.png",self.Fishes_path + "sur/eat-sur-f.png", self.Fishes_path + "sur/hit-sur-f.png"]
+		self.Fish_movs_e = [self.Fishes_path + "este/mov1-este-f.png", self.Fishes_path + "este/mov2-este-f.png",self.Fishes_path + "este/eat-este-f.png", self.Fishes_path + "este/hit-este-f.png"]
+		self.Fish_movs_w = [self.Fishes_path + "oeste/mov1-oeste-f.png", self.Fishes_path + "oeste/mov2-oeste-f.png",self.Fishes_path + "oeste/eat-oeste-f.png", self.Fishes_path + "oeste/hit-oeste-f.png"]
+
+		self.Fish_lst = [[],[],[],[]]
+		# self.Fishe_lst = [ self.Fishes_movs_n for i in range(0,3) , self.Fishes_movs_e for i in range(0,3), self.Fishes_movs_s for i in range(0,3), self.Fishes_movs_w for i in range(0,3) ]
+		self.Fish_lst = [ list(self.Fish_movs_n) , list(self.Fish_movs_e), list(self.Fish_movs_s), list(self.Fish_movs_w) ]
+
+		self.Fishes_img_n = []
+		self.Fishes_img_e = []
+		self.Fishes_img_s = []
+		self.Fishes_img_w = []
+		self.Fishes_w = 20
+		self.Fishes_h = 20
+		self.Fishe_area = pygame.Rect((0,0),(self.Fishes_w,self.Fishes_h))
 
 
+		for i in range(0,4):
+			self.Fishes_img_n.append(self.game.image.load(self.Fish_lst[0][i]).convert_alpha(self.background))
+			self.Fishes_img_e.append( self.game.image.load(self.Fish_lst[1][i]).convert_alpha(self.background) )
+			self.Fishes_img_s.append( self.game.image.load(self.Fish_lst[2][i]).convert_alpha(self.background) )
+			self.Fishes_img_w.append( self.game.image.load(self.Fish_lst[3][i]).convert_alpha(self.background) )
+
+		self.Fishes_img = [ list(self.Fishes_img_n), list(self.Fishes_img_e),list(self.Fishes_img_s), list(self.Fishes_img_w) ]
+
+	def Retrieve_fish_lst(self):
+		return self.Fishes_img
+
+
+	def Sharks_img(self):
+		self.Shark_path = "./Images/sprites/tiburon/"
+		self.Shark_movs_n = [self.Shark_path + "norte/mov1-norte.png", self.Shark_path + "norte/mov2-norte.png",self.Shark_path + "norte/eat-norte.png", self.Shark_path + "norte/hit-norte.png"]
+		self.Shark_movs_s = [self.Shark_path + "sur/mov1-sur.png", self.Shark_path + "sur/mov2-sur.png",self.Shark_path + "sur/eat-sur.png", self.Shark_path + "sur/hit-sur.png"]
+		self.Shark_movs_e = [self.Shark_path + "este/mov1-este.png", self.Shark_path + "este/mov2-este.png",self.Shark_path + "este/eat-este.png", self.Shark_path + "este/hit-este.png"]
+		self.Shark_movs_w = [self.Shark_path + "oeste/mov1-oeste.png", self.Shark_path + "oeste/mov2-oeste.png",self.Shark_path + "oeste/eat-oeste.png", self.Shark_path + "oeste/hit-oeste.png"]
+		self.Shark_lst = [ [],[],[],[] ]
+#	self.Shark_lst = [ self.Sharks_movs_n for i in range(0,3) , self.Sharks_movs_e for i in range(0,3), self.Sharks_movs_s for i in range(0,3), self.Sharks_movs_w for i in range(0,3) ]
+		self.Shark_lst = [ list(self.Shark_movs_n) , list(self.Shark_movs_e), list(self.Shark_movs_s), list(self.Shark_movs_w) ]
+
+=======
 	def Sharks_img(self):
 		self.Shark_path = "./Images/sprites/tiburon/"
 		self.Shark_movs_n = [self.Shark_path + "norte/mov1-norte.png", self.Shark_path + "norte/mov2-norte.png",self.Shark_path + "norte/eat-norte.png", self.Shark_path + "norte/hit-norte.png"]
@@ -98,6 +217,7 @@ class Game:
 #	self.Shark_lst = [ self.Sharks_movs_n for i in range(0,3) , self.Sharks_movs_e for i in range(0,3), self.Sharks_movs_s for i in range(0,3), self.Sharks_movs_w for i in range(0,3) ]
 		self.Shark_lst = [ list(self.Shark_movs_n) , list(self.Shark_movs_e), list(self.Shark_movs_s), list(self.Shark_movs_w) ]
 
+>>>>>>> e8af9c493a41215176a4fb405073446dae192741
 		self.Sharks_img_n = []
 		self.Sharks_img_e = []
 		self.Sharks_img_s = []
@@ -108,7 +228,11 @@ class Game:
 
 		# Se cargan las imagenes con todos los movimientos del tiburon
 		for i in range(0,4):		
+<<<<<<< HEAD
+			self.Sharks_img_n.append(self.game.image.load(self.Shark_lst[0][i]).convert_alpha(self.background) )
+=======
 			self.Sharks_img_n.append(self.game.image.load(self.Shark_lst[0][i]).convert_alpha(self.background))
+>>>>>>> e8af9c493a41215176a4fb405073446dae192741
 			self.Sharks_img_e.append( self.game.image.load(self.Shark_lst[1][i]).convert_alpha(self.background) )
 			self.Sharks_img_s.append( self.game.image.load(self.Shark_lst[2][i]).convert_alpha(self.background) )
 			self.Sharks_img_w.append( self.game.image.load(self.Shark_lst[3][i]).convert_alpha(self.background)  )
@@ -119,12 +243,25 @@ class Game:
 
 	def draw(self):
 		self.screen.blit( self.background, (0,0) )
+<<<<<<< HEAD
+		self.Collect_sprites()
+
+		for i in range(self.Shark_n):	
+			if self.Sharks[i].alive == True:
+				self.screen.blit( self.Sharks[i].get_curr_img() ,(self.Sharks[i].X, self.Sharks[i].Y ))
+
+
+		for j in range(self.Fishes_n):
+			if self.Fishes[j].alive == True:
+				self.screen.blit( self.Fishes[j].get_curr_img() ,(self.Fishes[j].X, self.Fishes[j].Y ))
+=======
 
 		for i in range(self.Shark_n):		
 			self.screen.blit( self.Sharks[i].get_curr_img() ,(self.Sharks[i].X, self.Sharks[i].Y ))
 
 		for j in range(self.Fishes_n):
 			self.screen.blit( self.Fishes[i].get_curr_img() ,(self.Fishes[j].X, self.Fishes[j].Y ))
+>>>>>>> e8af9c493a41215176a4fb405073446dae192741
 
 	
 
