@@ -1,15 +1,14 @@
 import pygame
 from random import randrange
 import threading
-<<<<<<< HEAD
-import time
-=======
 
->>>>>>> e8af9c493a41215176a4fb405073446dae192741
+import time
+
 class Fishes(threading.Thread):
 
 	def __init__(self,fish_lst,X,Y,vel,genre):
-		threading.Thread.__init__(self)
+		super(Fishes, self).__init__()
+        	self._stop = threading.Event()
 
 		self.fish_lst = fish_lst
 		self.X = X
@@ -20,26 +19,30 @@ class Fishes(threading.Thread):
 		self.Or = randrange(4)
 		self.movd = 0
 		self.fish_img_curr = fish_lst[0][0]
-
+		self.Sharkslist=[]
+		self.Fisheslist=[]
+		self.genre=genre
 
 		#SPRITES
 		self.spri = pygame.sprite.Sprite() # create sprite
 		self.spri.image = self.fish_img_curr
 		self.spri.rect = self.fish_img_curr.get_rect() # use image extent values			
 		self.spri.rect.topleft = [self.X, self.Y] # put the ball in the top left corner
+		self.spri.type="fish"
+		self.spri.genre=self.genre
 
 	def Mov(self):
 		
-<<<<<<< HEAD
+
 		if self.movd == 6:
 			self.Or = randrange(4)	
 			self.movd =0
 		elif self.movd < 6:
 			self.movd +=1
 
-=======
-		self.Or = randrange(4)
->>>>>>> e8af9c493a41215176a4fb405073446dae192741
+
+		#self.Or = randrange(4)
+
 		if (self.Or == 0):
 			self.Y -= self.vel
 			if(self.mov_n==0):
@@ -122,27 +125,49 @@ class Fishes(threading.Thread):
 			if(a.X==sprite.x and a.Y==sprite.y):
 				self.Colision(a)
 
+	def Colision(self,objeto):
+		if (objeto.type=="fish"):
+			self.Comer(objeto)
+		elif (objeto.type=="shark"):
+			if (self.genre != objeto.genre):
+				self.Reproducir()
+			else:
+				if(randrange(1)==1):
+					self.Comer(objeto)
+				else:
+					self.Die()
+
+	def Reproducir(self):
+		shark=Sharks()
+		shark.start()
+
+	def Comer(self,objeto):
+		objeto.kill()
+
+	def Die(self):
+		 self._stop.set()
+
 	def get_curr_img(self):
 		return self.fish_img_curr
-<<<<<<< HEAD
 
-=======
->>>>>>> e8af9c493a41215176a4fb405073446dae192741
 
 	def run(self):
 		print "SOY UN PEZ@"
 		while True:
-<<<<<<< HEAD
+
 			self.Mov() 
-#			colisionF = pygame.sprite.spritecollide(self.spri,self.sprit_fishes,True)
-#			for i in colisionF:
-#				self.getClases(i)
+			colisionF = pygame.sprite.spritecollide(self.spri,self.sprit_fishes,True)
+			for i in colisionF:
+				print "Me tocaron"
+				self.Die()
+				#self.alive=False
+				#self.Colision(i)
+				#print i.groups()
 #
 #			colisionS= pygame.sprite.spritecollide(self.spri,self.sprit_sharks,True)
 #			for j in colisionS:
 #				self.getClases(j)
 			time.sleep(.7)
-=======
-			self.Mov()
 
->>>>>>> e8af9c493a41215176a4fb405073446dae192741
+
+
