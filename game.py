@@ -39,19 +39,20 @@ class Game:
 	# se carga el lote de imagenes
 
 	def Collect_sprites(self):
+
 		self.Sharks_spri.empty()
 		self.Fishes_spri.empty()
 
 		for i in range(self.Shark_n):	
 			if self.Sharks[i].alive:
 				self.Sharks[i].load_sprite(self.Sharks_spri,self.Fishes_spri)
-				self.Sharks_spri.add( self.Sharks[i].spri)
+				self.Sharks_spri.add( self.Sharks[i])
 
 
 		for i in range(self.Fishes_n):
 			if self.Fishes[i].alive:
 				self.Fishes[i].load_sprite(self.Sharks_spri,self.Fishes_spri)
-				self.Fishes_spri.add( self.Fishes[i].spri)
+				self.Fishes_spri.add( self.Fishes[i])
 		
 
 
@@ -182,6 +183,13 @@ def main():
 			if event.type == pygame.QUIT:
 				exit_game()
 		juego.draw()
+		if pygame.sprite.groupcollide(juego.Sharks_spri,juego.Fishes_spri, 1, 1):
+			print "Alguien Choco"
+
+		
+
+
+
 		
 		pygame.display.update()
 

@@ -4,12 +4,12 @@ import threading
 
 import time
 
-class Fishes(threading.Thread):
+class Fishes(threading.Thread, pygame.sprite.Sprite):
 
 	def __init__(self,fish_lst,X,Y,vel,genre):
 		super(Fishes, self).__init__()
-        	self._stop = threading.Event()
-
+		self._stop = threading.Event()
+		pygame.sprite.Sprite.__init__(self)
 		self.fish_lst = fish_lst
 		self.X = X
 		self.Y = Y
@@ -24,12 +24,12 @@ class Fishes(threading.Thread):
 		self.genre=genre
 
 		#SPRITES
-		self.spri = pygame.sprite.Sprite() # create sprite
-		self.spri.image = self.fish_img_curr
-		self.spri.rect = self.fish_img_curr.get_rect() # use image extent values			
-		self.spri.rect.topleft = [self.X, self.Y] # put the ball in the top left corner
-		self.spri.type="fish"
-		self.spri.genre=self.genre
+		#self.spri = pygame.sprite.Sprite() # create sprite
+		self.image = self.fish_img_curr
+		self.rect = self.fish_img_curr.get_rect() # use image extent values			
+		self.rect.topleft = [self.X, self.Y] # put the ball in the top left corner
+		self.type="fish"
+		self.genre=self.genre
 
 	def Mov(self):
 		
@@ -111,9 +111,9 @@ class Fishes(threading.Thread):
 			elif(self.X<self.X_min_limit):
 				self.X=X_max_limit+4
 			
-			self.spri.image = self.fish_img_curr # load ball image
-			self.spri.rect = self.fish_img_curr.get_rect() # use image extent values			
-			self.spri.rect.topleft = [self.X, self.Y] # put the ball in the top left corner
+			self.image = self.fish_img_curr # load ball image
+			self.rect = self.fish_img_curr.get_rect() # use image extent values			
+			self.rect.topleft = [self.X, self.Y] # put the ball in the top left corner
 
 	def load_sprite(self,sprit_sharks,sprit_fishes):
 		self.sprit_sharks =sprit_sharks
@@ -126,29 +126,41 @@ class Fishes(threading.Thread):
 				self.Colision(a)
 
 	def Colision(self,objeto):
-		if (objeto.type=="fish"):
-			self.Comer(objeto)
-		elif (objeto.type=="shark"):
+		if (objeto.type=="shark"):
+			self.Die()
+		elif (objeto.type=="fish"):
+			print "sexo uno " + `self.genre` +" sexo dos "  +`objeto.genre`
 			if (self.genre != objeto.genre):
 				self.Reproducir()
 			else:
-				if(randrange(1)==1):
+				if(randrange(2)==1):
 					self.Comer(objeto)
 				else:
 					self.Die()
 
 	def Reproducir(self):
-		shark=Sharks()
-		shark.start()
+		print "Me reproduje"
+		X=self.X +5
+		Y= self.Y +15
+		g=randrange(1);
+		fish=Fishes(self.fish_lst,X,Y,self.vel,g)
+		fish.start()
 
 	def Comer(self,objeto):
+		print "Comi"
 		objeto.kill()
 
 	def Die(self):
+		 print "Mori"
+		 self.alive=False
 		 self._stop.set()
 
 	def get_curr_img(self):
 		return self.fish_img_curr
+
+	def juan(self):
+		
+			print "Chocaron"
 
 
 	def run(self):
@@ -156,10 +168,16 @@ class Fishes(threading.Thread):
 		while True:
 
 			self.Mov() 
-			colisionF = pygame.sprite.spritecollide(self.spri,self.sprit_fishes,True)
-			for i in colisionF:
-				print "Me tocaron"
-				self.Die()
+			#print self.sprit_fishesun 
+			#if pygame.sprite.spritecollide(self,self.sprit_fishes,0):
+				#print "Soy un pez, choque con un pez"
+
+			# for i in colisionF:
+			# 	#print "Me tocaron"
+			# 	#print i.genre
+			# 	#self.Reproducir()
+			# 	self.Colision(i)
+
 				#self.alive=False
 				#self.Colision(i)
 				#print i.groups()
