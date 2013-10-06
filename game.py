@@ -38,7 +38,7 @@ class Game:
 
 
 	
-	@staticmethod
+
 	def Collect_sprites(self):
 
 		self.Sharks_spri.empty()
