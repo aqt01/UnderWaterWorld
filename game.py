@@ -35,6 +35,10 @@ class Game:
 		
 	# se carga el lote de imagenes
 
+
+
+	
+	@staticmethod
 	def Collect_sprites(self):
 
 		self.Sharks_spri.empty()
@@ -245,7 +249,7 @@ class Game:
 	
 
 def main():
-	juego = Game(1,15,800,600) #Se recibe 1er parametro la cantidad de tiburones y 2do cantidad de peces
+	juego = Game(10,40,800,600) #Se recibe 1er parametro la cantidad de tiburones y 2do cantidad de peces
 
 	while True:
 #    for event in pygame.event.get():

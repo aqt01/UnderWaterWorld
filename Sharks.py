@@ -28,7 +28,7 @@ class Sharks(threading.Thread,pygame.sprite.Sprite):
 		self.Fisheslist=[]
 		self.type="shark"
 		self.die =0
-
+		#game.Collect_sprites()
 		self.Y_max_limit = Y_max		
 		self.X_max_limit = X_max
 		self.Y_min_limit = 0
@@ -94,11 +94,8 @@ class Sharks(threading.Thread,pygame.sprite.Sprite):
 			elif (self.mov_n==1):
 				self.shark_img_curr = self.shark_lst[self.Or +self.mov_p][1]				
 				self.mov_n=0
-			elif (self.die==1):
-				self.shark_img_curr = self.shark_lst[self.Or +self.mov_p][2]
-
+			
 			elif(self.comer==1):
-				self.shark_img_curr = self.shark_lst[self.Or +self.mov_p][3]		
 				self.comer=0
 #			elif(self.Y>self.Y_max_limit):
 ##				self.Y=20				
@@ -116,7 +113,6 @@ class Sharks(threading.Thread,pygame.sprite.Sprite):
 				self.shark_img_curr = self.shark_lst[self.Or +self.mov_p][2]
 
 			elif(self.comer==1):
-				self.shark_img_curr = self.shark_lst[self.Or +self.mov_p ][3]		
 				self.comer=0
 			#elif(self.X>self.X_max_limit):
 #				self.X=20
@@ -131,15 +127,9 @@ class Sharks(threading.Thread,pygame.sprite.Sprite):
 			elif (self.mov_n==1):
 				self.shark_img_curr = self.shark_lst[self.Or +self.mov_p][1]				
 				self.mov_n=0
-			elif (self.die==1):
-				self.shark_img_curr = self.shark_lst[self.Or +self.mov_p ][2]
-
+			
 			elif(self.comer==1):
-				self.shark_img_curr = self.shark_lst[self.Or +self.mov_p ][3]		
 				self.comer=0
-			#elif(self.Y<self.Y_min_limit):
-			#	self.Y=self.Y_max_limit-20
-				#self.Y=20
 			
 		elif(self.Or ==3):
 			self.X -= self.vel
@@ -150,11 +140,8 @@ class Sharks(threading.Thread,pygame.sprite.Sprite):
 			elif (self.mov_n==1):
 				self.shark_img_curr = self.shark_lst[self.Or +self.mov_p][1]				
 				self.mov_n=0
-			elif (self.die==1):
-				self.shark_img_curr = self.shark_lst[self.Or +self.mov_p][2]
 				
 			elif(self.comer==1):
-				self.shark_img_curr = self.shark_lst[self.Or +self.mov_p ][3]
 				self.comer=0
 		
 #			elif(self.X<self.X_min_limit):
@@ -173,7 +160,7 @@ class Sharks(threading.Thread,pygame.sprite.Sprite):
 				self.movd=0				
 				#self.Y=self.Y_max_limit-20
 		elif(self.X<self.X_min_limit):
-				self.X=X_max_limit
+				self.X=self.X_max_limit
 				self.movd=0
 				#self.X=20
 
@@ -205,12 +192,13 @@ class Sharks(threading.Thread,pygame.sprite.Sprite):
 
 	def Reproducir(self):
 		print "Me reproduje"
-		X=self.X +5
-		Y= self.Y +5
-		g=randrange(1);
-		shark=Sharks(self.shark_lst,X,Y,self.vel,g,self,self.self.X_max_limit,self.Y_max_limit)
+		X=self.X 
+		Y= self.Y
+		g=randrange(2)
+		shark=Sharks(self.shark_lst,X,Y,self.vel,g,self.X_max_limit,self.Y_max_limit)
 		game.Sharkslist.append(shark)
-		shark.start()
+		game.Sharkslist[-1].start()
+		#shark.start()
 
 	def Comer(self,objeto):
 		print "Comi"
@@ -228,8 +216,11 @@ class Sharks(threading.Thread,pygame.sprite.Sprite):
 		self._stop.set()
 
 	def run(self):
-		print "hola"
-
+		print "Soy Tiburon"
+		imgTemp=self.shark_img_curr
+		self.shark_img_curr=pygame.image.load("./Images/huevoShark.png").convert_alpha()
+		time.sleep(3)
+		self.shark_img_curr=imgTemp
 		
 		while self.alive==True:
 			
@@ -242,7 +233,7 @@ class Sharks(threading.Thread,pygame.sprite.Sprite):
 					print "tiburon con tiburon"
 			# 	print "Colicione, soy tiburon"
 
-			time.sleep(0.7)
+			time.sleep(0.3)
 
 		# self.Sharks_ListX = []
 		# self.Sharks_ListY = []

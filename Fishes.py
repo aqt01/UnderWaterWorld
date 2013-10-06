@@ -24,10 +24,10 @@ class Fishes(threading.Thread, pygame.sprite.Sprite):
 		self.Fisheslist=[]	
 		self.genre=genre
 		self.die =0
-
+		#game.Collect_sprites()
 		self.Y_max_limit = Y_max		
 		self.X_max_limit = X_max
-		
+		#game.Game.Collect_sprites();
 		self.Y_min_limit = 0
 		self.X_min_limit = 0
 
@@ -44,8 +44,7 @@ class Fishes(threading.Thread, pygame.sprite.Sprite):
 		self.fish_img_curr = self.fish_lst[self.img_pos][0]	
 		self.image = self.fish_img_curr
 		self.rect = self.fish_img_curr.get_rect() # use image extent values			
-		self.rect.topleft = [self.X, self.Y] # put the ball in the top left corner
-		
+		self.rect.topleft = [self.X, self.Y] # put the ball in the top left corner		
 		self.type="fish"
 		
 	def Mov(self):
@@ -76,11 +75,8 @@ class Fishes(threading.Thread, pygame.sprite.Sprite):
 			elif (self.mov_n==1):
 				self.fish_img_curr = self.fish_lst[self.Or +self.mov_p][1]
 				self.mov_n=0
-			elif (self.die==1):
-				self.fish_img_curr = self.fish_lst[self.Or +self.mov_p][2]
-
+			
 			elif(self.comer==1):
-				self.fish_img_curr = self.fish_lst[self.Or +self.mov_p][3]
 				self.comer=0
 			#elif(self.Y>self.Y_max_limit):
 				##self.Y=20
@@ -94,16 +90,9 @@ class Fishes(threading.Thread, pygame.sprite.Sprite):
 			elif (self.mov_n==1):
 				self.fish_img_curr = self.fish_lst[self.Or +self.mov_p][1]
 				self.mov_n=0
-			elif (self.die==1):
-				self.fish_img_curr = self.fish_lst[self.Or +self.mov_p][2]
-
 			elif(self.comer==1):
-				self.fish_img_curr = self.fish_lst[self.Or +self.mov_p][3]
 				self.comer=0
-			#elif(self.X>self.X_max_limit):
-				##self.X=20
-			#	self.X=X_max_limit-20
-
+			
 		elif (self.Or == 2):
 			self.Y += self.vel
 			if(self.mov_n==0):
@@ -116,12 +105,8 @@ class Fishes(threading.Thread, pygame.sprite.Sprite):
 				self.fish_img_curr = self.fish_lst[self.Or +self.mov_p][2]
 
 			elif(self.comer==1):
-				self.fish_img_curr = self.fish_lst[self.Or +self.mov_p][3]
 				self.comer=0
-			#elif(self.Y<self.Y_min_limit):
-			#	#self.Y=self.Y_max_limit-20
-			#	self.Y=20
-
+			
 		elif(self.Or ==3):
 			self.X -= self.vel
 
@@ -131,11 +116,8 @@ class Fishes(threading.Thread, pygame.sprite.Sprite):
 			elif (self.mov_n==1):
 				self.fish_img_curr = self.fish_lst[self.Or +self.mov_p][1]
 				self.mov_n=0
-			elif (self.die==1):
-				self.fish_img_curr = self.fish_lst[self.Or +self.mov_p][2]
-
+			
 			elif(self.comer==1):
-				self.fish_img_curr = self.fish_lst[self.Or +self.mov_p][3]
 				self.comer=0
 			#elif(self.X<self.X_min_limit):
 				##self.X=X_max_limit-20
@@ -153,7 +135,7 @@ class Fishes(threading.Thread, pygame.sprite.Sprite):
 				self.movd=0				
 				#self.Y=self.Y_max_limit-20
 		elif(self.X<self.X_min_limit):
-				self.X=X_max_limit
+				self.X=self.X_max_limit
 				self.movd=0
 				#self.X=20
 
@@ -187,12 +169,13 @@ class Fishes(threading.Thread, pygame.sprite.Sprite):
 
 	def Reproducir(self):
 		print "Me reproduje"
-		X=self.X +5
-		Y= self.Y +5
-		g=randrange(1);
+		X=self.X 
+		Y= self.Y 
+		g=randrange(2)
 		fish=Fishes(self.fish_lst,X,Y,self.vel,g,self.X_max_limit,self.Y_max_limit)
 		game.Fisheslist.append(fish)
-		fish.start()
+		game.Fisheslist[-1].start()
+		#fish.start()
 
 	def Comer(self,objeto):
 		print "Comi"
@@ -203,26 +186,23 @@ class Fishes(threading.Thread, pygame.sprite.Sprite):
 		objeto.Die()
 
 	def Die(self):
-		
-		 self.die = 1
-		 self.fish_img_curr = self.fish_lst[self.Or +self.mov_p][3]
-		# time.sleep(0.7)
-    		 time.sleep(0.7) 	 
-                  
-		 print "Mori"
-		 self.alive=False
-		 self._stop.set()
+		self.die = 1
+		self.fish_img_curr = self.fish_lst[self.Or +self.mov_p][3]
+		time.sleep(0.7)
+		print "Mori"
+		self.alive=False
+		self._stop.set()
 
 	def get_curr_img(self):
 		return self.fish_img_curr
 
-	def juan(self):
-		
-			print "Chocaron"
-
 
 	def run(self):
 		print "SOY UN PEZ@"
+		imgTemp=self.fish_img_curr
+		self.fish_img_curr=pygame.image.load("./Images/huevoFish.png").convert_alpha()
+		time.sleep(3)
+		self.fish_img_curr=imgTemp
 
 		while self.alive==True:
 			self.Mov() 
