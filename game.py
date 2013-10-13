@@ -44,7 +44,7 @@ class Game:
 		self.Sharks_spri.empty()
 		self.Fishes_spri.empty()
 		otherlistshark=[]
-		for i in range(self.Shark_n):	
+		for i in range(len(Sharkslist)):	
 			if Sharkslist[i].alive:
 				otherlistshark.append(Sharkslist[i])
 				self.Sharks_spri.add( Sharkslist[i])
@@ -53,7 +53,7 @@ class Game:
 			j.load_sprite(self.Sharks_spri,self.Fishes_spri)
 
 		otherlistfish = []
-		for i in range(self.Fishes_n):
+		for i in range(len(Fisheslist)):
 			if Fisheslist[i].alive:
 				
 				otherlistfish.append(Fisheslist[i])
@@ -236,13 +236,13 @@ class Game:
 
 		self.Collect_sprites()
 
-		for i in range(self.Shark_n):	
+		for i in range(len(Sharkslist)):	
 			if Sharkslist[i].alive == True:
 				#MODIFICADO
 				self.screen.blit( Sharkslist[i].get_curr_img() ,(Sharkslist[i].X, Sharkslist[i].Y ))
 
 
-		for j in range(self.Fishes_n):
+		for j in range(len(Fisheslist)):
 			if Fisheslist[j].alive == True:
 				self.screen.blit( Fisheslist[j].get_curr_img() ,(Fisheslist[j].X, Fisheslist[j].Y ))
 

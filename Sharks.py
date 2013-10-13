@@ -197,6 +197,7 @@ class Sharks(threading.Thread,pygame.sprite.Sprite):
 		g=randrange(2)
 		shark=Sharks(self.shark_lst,X,Y,self.vel,g,self.X_max_limit,self.Y_max_limit)
 		game.Sharkslist.append(shark)
+		print game.Sharkslist[-1]
 		game.Sharkslist[-1].start()
 		#shark.start()
 
