@@ -1,12 +1,12 @@
 import pygame
 from random import randrange
 import threading
-import game
+
 import time
 
 class Fishes(threading.Thread, pygame.sprite.Sprite):
 
-	def __init__(self,fish_lst,X,Y,vel,genre,X_max,Y_max):
+	def __init__(self,fish_lst,X,Y,vel,genre,X_max,Y_max,game):
 
 		super(Fishes, self).__init__()
 		self._stop = threading.Event()
@@ -30,7 +30,9 @@ class Fishes(threading.Thread, pygame.sprite.Sprite):
 		#game.Game.Collect_sprites();
 		self.Y_min_limit = 0
 		self.X_min_limit = 0
-
+		self.game=game
+		self.game.Collect_sprites()
+		self.TenerHijos = True
 		if self.genre==0:
 			self.mov_p = 0
 		else:
@@ -168,13 +170,17 @@ class Fishes(threading.Thread, pygame.sprite.Sprite):
 					self.Die()
 
 	def Reproducir(self):
-		print "Me reproduje"
-		X=self.X 
-		Y= self.Y 
-		g=randrange(2)
-		fish=Fishes(self.fish_lst,X,Y,self.vel,g,self.X_max_limit,self.Y_max_limit)
-		game.Fisheslist.append(fish)
-		game.Fisheslist[-1].start()
+
+		if self.TenerHijos==True:
+			print "Me reproduje"
+			X=self.X 
+			Y= self.Y +15
+			g=randrange(2)
+			fish=Fishes(self.fish_lst,X,Y,self.vel,g,self.X_max_limit,self.Y_max_limit,self.game)
+			self.game.Fisheslist.append(fish)
+			self.game.Fishes_spri.add( self.game.Fisheslist[-1])
+			self.game.Fisheslist[-1].start()
+			self.TenerHijos=False
 		#fish.start()
 
 	def Comer(self,objeto):

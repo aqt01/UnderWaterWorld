@@ -6,25 +6,29 @@ from random import randrange
 	
 
 	
-Sharkslist = []
-Fisheslist = []
+
 
 class Game:
 
-	def __init__(self, Shark_n, Fishes_n,w,h):
+	def __init__(self, Shark_n, Fishes_n,w,h): # w = 800, h = 600
+		#Se inicializa pygame
 		self.game = pygame
 		self.game.init()
+		# Se carga el path del background
 		self.background_path ="./Images/background.jpg"
 		self.Width = w
 		self.Heigth = h		
-		self.screen=pygame.display.set_mode( (800,600),0,32)
+		# Se carga el fondo con w y h que son introducidas por parametros
+		self.screen=pygame.display.set_mode( (w,h),0,32)
+		# Se carga la imagen de fondo
 		self.background = self.game.image.load(self.background_path).convert()
-		
+		# Se asigna la velocidad que seran los px que los sprites caminaran por cada paso
 		self.vel = 8
-
+		#se cargan las imagenes de tiburones y peces
 		self.Sharks_img()
 		self.Fishes_img()
-
+		self.Sharkslist = []
+		self.Fisheslist = []
 		self.img_pos = 0
 		self.alpha = 128
 		self.Sharks_spri = pygame.sprite.Group()
@@ -33,31 +37,35 @@ class Game:
 		self.Collect_sprites()
 
 		
-	# se carga el lote de imagenes
-
-
-
-	
-
+	# La funcion se encarga de ir colectando las imagenes en dos listas mientras estas se van moviendo durante la ejecucion
 	def Collect_sprites(self):
+		# Se vacean las imagenes ya cargadas para ir cargando las demas
 
-		self.Sharks_spri.empty()
-		self.Fishes_spri.empty()
+		#self.Sharks_spri.empty()
+		#self.Fishes_spri.empty()
 		otherlistshark=[]
-		for i in range(len(Sharkslist)):	
-			if Sharkslist[i].alive:
-				otherlistshark.append(Sharkslist[i])
-				self.Sharks_spri.add( Sharkslist[i])
+
+		for i in range(len(self.Sharkslist)):	
+
+			if self.Sharkslist[i].alive:
+				otherlistshark.append(self.Sharkslist[i])
+				#self.Sharks_spri.add( self.Sharkslist[i])
+
+			if self.Sharkslist[i].alive==False:
+				self.Sharks_spri.remove( self.Sharkslist[i])
 
 		for j in otherlistshark:
 			j.load_sprite(self.Sharks_spri,self.Fishes_spri)
 
 		otherlistfish = []
-		for i in range(len(Fisheslist)):
-			if Fisheslist[i].alive:
+		for i in range(len(self.Fisheslist)):
+			if self.Fisheslist[i].alive:
 				
-				otherlistfish.append(Fisheslist[i])
-				self.Fishes_spri.add( Fisheslist[i])
+				otherlistfish.append(self.Fisheslist[i])
+				#self.Fishes_spri.add( self.Fisheslist[i])
+			if self.Fisheslist[i].alive==False:
+				self.Fishes_spri.remove( self.Fisheslist[i])
+
 
 		for j in otherlistfish:
 			j.load_sprite(self.Sharks_spri,self.Fishes_spri)
@@ -66,10 +74,10 @@ class Game:
 		
 
 
-
+	# Funcion para crear las unidades, tanto los peces como los tiburones
 
 	def Create_units(self,Shark_n,Fishes_n,vel):
-		self.pos = []
+		self.pos = [] 
 		self.vel = vel
 		self.Shark_n = Shark_n
 		self.Fishes_n = Fishes_n
@@ -86,9 +94,10 @@ class Game:
 				g=0
 			else:
 				g=1
-			x = Sharks.Sharks( self.Retrieve_shark_lst(), randrange(self.Width), randrange(self.Heigth),self.vel,  g,self.Width,self.Heigth)
+			x = Sharks.Sharks( self.Retrieve_shark_lst(), randrange(self.Width), randrange(self.Heigth),self.vel,  g,self.Width,self.Heigth,self)
 			#MODIFICADO
-			Sharkslist.append(x)
+			self.Sharkslist.append(x)
+			self.Sharks_spri.add( self.Sharkslist[-1])
 
 		
 		for i in range (Fishes_n):
@@ -97,10 +106,11 @@ class Game:
 			else:
 				g=1
 
-			y = Fishes.Fishes(self.Retrieve_fish_lst(), randrange(self.Width),randrange(self.Heigth), self.vel, g,self.Width,self.Heigth)
+			y = Fishes.Fishes(self.Retrieve_fish_lst(), randrange(self.Width),randrange(self.Heigth), self.vel, g,self.Width,self.Heigth,self)
 
 			#MODIFICADO
-			Fisheslist.append(y)
+			self.Fisheslist.append(y)
+			self.Fishes_spri.add( self.Fisheslist[-1])
 
 
 		self.Collect_sprites()
@@ -108,13 +118,14 @@ class Game:
 		
 		for i in range(Shark_n):
 			#MODIFICADO
-			Sharkslist[i].start()
+			self.Sharkslist[i].start()
 
 		for i in range(Fishes_n):
 			#MODIFICADO
-			Fisheslist[i].start()
+			self.Fisheslist[i].start()
 
 	#Imagenes de los peces
+	# Se cargan las imagenes de los peces, el mismo proceso se repite con los tiburones
 	def Fishes_img(self):
 		
 		self.Fishes_path = "./Images/sprites/peces/"
@@ -236,32 +247,30 @@ class Game:
 
 		self.Collect_sprites()
 
-		for i in range(len(Sharkslist)):	
-			if Sharkslist[i].alive == True:
+		for i in range(len(self.Sharkslist)):	
+			if self.Sharkslist[i].alive == True:
 				#MODIFICADO
-				self.screen.blit( Sharkslist[i].get_curr_img() ,(Sharkslist[i].X, Sharkslist[i].Y ))
+				self.screen.blit( self.Sharkslist[i].get_curr_img() ,(self.Sharkslist[i].X, self.Sharkslist[i].Y ))
 
 
-		for j in range(len(Fisheslist)):
-			if Fisheslist[j].alive == True:
-				self.screen.blit( Fisheslist[j].get_curr_img() ,(Fisheslist[j].X, Fisheslist[j].Y ))
+		for j in range(len(self.Fisheslist)):
+			if self.Fisheslist[j].alive == True:
+				self.screen.blit( self.Fisheslist[j].get_curr_img() ,(self.Fisheslist[j].X, self.Fisheslist[j].Y ))
 
 	
 
 def main():
-	juego = Game(10,40,800,600) #Se recibe 1er parametro la cantidad de tiburones y 2do cantidad de peces
+	juego = Game(10,40,800,600) #Se recibe 1er parametro la cantidad de tiburones y 2do cantidad de peces,
+				   # 3er y 4to parametro son anchura y altura
 
-	while True:
-#    for event in pygame.event.get():
-#    if event.type == QUIT:
- #       pygame.quit()
-  #      sys.exit()
+	while True: # Loop, el juego se ejecuta dentro de esta clausura
 
 		for event in pygame.event.get():
-			if event.type == pygame.QUIT:
+			if event.type == pygame.QUIT: # Para salir del juego
 				exit_game()
-		juego.draw()
-		colisionDict =pygame.sprite.groupcollide(juego.Sharks_spri,juego.Fishes_spri, 0, 0)
+		juego.draw()# Para dibujjar los sprites del juego
+		colisionDict =pygame.sprite.groupcollide(juego.Sharks_spri,juego.Fishes_spri, 0, 0) # Para capturar las colisiones entre
+										# Tiburones y peces, devuelve un diccionario con colisiones
 		if  colisionDict:
 			colisiones=colisionDict.values()
 			for i in colisiones:
@@ -269,26 +278,7 @@ def main():
 					j.Die()
 				#print i
 			print "Pez Choco Con tiburon"
-		
-
-		# colisionDicts =pygame.sprite.groupcollide(juego.Fishes_spri,juego.Sharks_spri, 0, 0)
-		# if  colisionDicts:
-		# 	colisioness=colisionDicts.keys()
-		# 	#print colisiones
-		# 	for i in colisioness:
-		# 			i.Die()
-		# 		#print i
-		# 	print "Alguien Choco"
-			#print colisionDictoc
-
-		
-
-
-
-		
 		pygame.display.update()
-
-    #	pygame.display.update()
 
 if __name__ == "__main__":
 	main()

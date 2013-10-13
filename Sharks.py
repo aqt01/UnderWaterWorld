@@ -2,7 +2,6 @@ import pygame
 from random import randrange
 import threading
 import time
-import game
 
 
 
@@ -10,7 +9,7 @@ import game
 
 class Sharks(threading.Thread,pygame.sprite.Sprite):
 	# recibe lista de tiburiones, posicion, velocidad y genero
-	def __init__(self,shark_lst,X,Y,vel,genre,X_max,Y_max):
+	def __init__(self,shark_lst,X,Y,vel,genre,X_max,Y_max,game):
 #		self.Sharks_path = filename
 		#threading.Thread.__init__(self)
 		super(Sharks, self).__init__()
@@ -28,11 +27,14 @@ class Sharks(threading.Thread,pygame.sprite.Sprite):
 		self.Fisheslist=[]
 		self.type="shark"
 		self.die =0
+		self.TenerHijos=True
 		#game.Collect_sprites()
 		self.Y_max_limit = Y_max		
 		self.X_max_limit = X_max
 		self.Y_min_limit = 0
 		self.X_min_limit = 0
+		self.game=game
+		self.game.Collect_sprites()
 
 
 		if self.genre==0:
@@ -191,14 +193,16 @@ class Sharks(threading.Thread,pygame.sprite.Sprite):
 					self.Die()
 
 	def Reproducir(self):
-		print "Me reproduje"
-		X=self.X 
-		Y= self.Y
-		g=randrange(2)
-		shark=Sharks(self.shark_lst,X,Y,self.vel,g,self.X_max_limit,self.Y_max_limit)
-		game.Sharkslist.append(shark)
-		print game.Sharkslist[-1]
-		game.Sharkslist[-1].start()
+		if self.TenerHijos==True:
+			print "Me reproduje"
+			X=self.X 
+			Y= self.Y+15
+			g=randrange(2)
+			shark=Sharks(self.shark_lst,X,Y,self.vel,g,self.X_max_limit,self.Y_max_limit,self.game)
+			self.game.Sharkslist.append(shark)
+			self.game.Sharks_spri.add( self.game.Sharkslist[-1])
+			self.game.Sharkslist[-1].start()
+			self.TenerHijos=False
 		#shark.start()
 
 	def Comer(self,objeto):
