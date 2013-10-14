@@ -11,6 +11,7 @@ def read_conf_file():
 		all=string.maketrans('','')
 		nodigs=all.translate(all, string.digits)
 	
+<<<<<<< HEAD
 		f = open('configure.txt','r')
 		n=0
 		while 1:
@@ -20,6 +21,8 @@ def read_conf_file():
 			conf.append(line.translate(all, nodigs))
 		return conf
 	
+=======
+>>>>>>> 796eaa98be0e5990bd4de1c1dc8d418f508df7fc
 
 
 class Game:
