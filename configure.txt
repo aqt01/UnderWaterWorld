@@ -1,0 +1,4 @@
+Tiburones # 10
+Peces # 40
+Anchura # 800
+Altura # 600

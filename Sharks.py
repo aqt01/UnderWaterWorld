@@ -2,7 +2,6 @@ import pygame
 from random import randrange
 import threading
 import time
-import game
 
 
 
@@ -10,9 +9,7 @@ import game
 
 class Sharks(threading.Thread,pygame.sprite.Sprite):
 	# recibe lista de tiburiones, posicion, velocidad y genero
-	def __init__(self,shark_lst,X,Y,vel,genre,X_max,Y_max):
-#		self.Sharks_path = filename
-		#threading.Thread.__init__(self)
+	def __init__(self,shark_lst,X,Y,vel,genre,X_max,Y_max,game):
 		super(Sharks, self).__init__()
 		self._stop = threading.Event()
 		pygame.sprite.Sprite.__init__(self)
@@ -28,11 +25,13 @@ class Sharks(threading.Thread,pygame.sprite.Sprite):
 		self.Fisheslist=[]
 		self.type="shark"
 		self.die =0
-		#game.Collect_sprites()
+		self.TenerHijos=True
 		self.Y_max_limit = Y_max		
 		self.X_max_limit = X_max
 		self.Y_min_limit = 0
 		self.X_min_limit = 0
+		self.game=game
+		self.game.Collect_sprites()
 
 
 		if self.genre==0:
@@ -42,16 +41,10 @@ class Sharks(threading.Thread,pygame.sprite.Sprite):
 		self.shark_img_curr = self.shark_lst[self.img_pos][0]		
 		
 		#SPRITES
-		#self.spri = pygame.sprite.Sprite() # create sprite
 		
-		#self.topleft = [self.X, self.Y]
 		self.image = self.shark_img_curr # load ball image
 		self.rect = self.shark_img_curr.get_rect() # use image extent values			
 		self.rect.topleft = [self.X, self.Y] # put the ball in the top left corner
-
-		#self.image = self.shark_img_curr # load  image
-		#self.rect =  self.shark_img_curr.get_rect() # use image extent values			
-		#self.rect.topleft = [self.X, self.Y] 
 
 		self.Or = randrange(0,4)
 		self.movd =0
@@ -72,7 +65,6 @@ class Sharks(threading.Thread,pygame.sprite.Sprite):
 		self.rect = self.shark_img_curr.get_rect() # use image extent values			
 		self.rect.topleft = [self.X, self.Y]
 
-		#print "Shark: ",self.rect.topleft
 
 		if self.movd == 10:
 			self.Or = randrange(0,4)	
@@ -80,9 +72,6 @@ class Sharks(threading.Thread,pygame.sprite.Sprite):
 		elif self.movd < 10:
 			self.movd +=1
 
-
-			
-		#self.Or = randrange(4)
 
 		self.img_pos = self.Or+self.img_pos
 
@@ -97,9 +86,6 @@ class Sharks(threading.Thread,pygame.sprite.Sprite):
 			
 			elif(self.comer==1):
 				self.comer=0
-#			elif(self.Y>self.Y_max_limit):
-##				self.Y=20				
-				#self.Y=self.Y_max_limit-20
 				
 		elif(self.Or == 1):
 			self.X += self.vel
@@ -114,9 +100,6 @@ class Sharks(threading.Thread,pygame.sprite.Sprite):
 
 			elif(self.comer==1):
 				self.comer=0
-			#elif(self.X>self.X_max_limit):
-#				self.X=20
-			#	self.X=X_max_limit-20
 				
 
 		elif (self.Or == 2):
@@ -144,9 +127,7 @@ class Sharks(threading.Thread,pygame.sprite.Sprite):
 			elif(self.comer==1):
 				self.comer=0
 		
-#			elif(self.X<self.X_min_limit):
-				##self.X=X_max_limit-20
-				#self.X=20
+
 
 		if(self.X>self.X_max_limit):				
 				self.X=0
@@ -154,23 +135,21 @@ class Sharks(threading.Thread,pygame.sprite.Sprite):
 		elif(self.Y<self.Y_min_limit):
 				self.Y=self.Y_max_limit
 				self.movd=0
-				#self.Y=20
+				
 		elif(self.Y>self.Y_max_limit):
 				self.Y=0
 				self.movd=0				
-				#self.Y=self.Y_max_limit-20
+				
 		elif(self.X<self.X_min_limit):
 				self.X=self.X_max_limit
 				self.movd=0
-				#self.X=20
+				
 
-			#self.topleft = [self.X, self.Y]
+			
 		self.image = self.shark_img_curr # load ball image
 		self.rect = self.shark_img_curr.get_rect() # use image extent values			
 		self.rect.topleft = [self.X, self.Y] # put the ball in the top left corner
-			#print "SPRITE: ", self.spri.rect
-			#print "NOT SPRITE: ", self.X,self.Y
-
+			
 		
 	def Draw(self):		
 		self.screen.blit( self.shark_img_curr,(self.X, self.Y ))
@@ -191,20 +170,21 @@ class Sharks(threading.Thread,pygame.sprite.Sprite):
 					self.Die()
 
 	def Reproducir(self):
-		print "Me reproduje"
-		X=self.X 
-		Y= self.Y
-		g=randrange(2)
-		shark=Sharks(self.shark_lst,X,Y,self.vel,g,self.X_max_limit,self.Y_max_limit)
-		game.Sharkslist.append(shark)
-		game.Sharkslist[-1].start()
-		#shark.start()
+		if self.TenerHijos==True:
+			print "Tiburon: Me reproduje"
+			X=self.X 
+			Y= self.Y+15
+			g=randrange(2)
+			shark=Sharks(self.shark_lst,X,Y,self.vel,g,self.X_max_limit,self.Y_max_limit,self.game)
+			self.game.Sharkslist.append(shark)
+			self.game.Sharks_spri.add( self.game.Sharkslist[-1])
+			self.game.Sharkslist[-1].start()
+			self.TenerHijos=False
+		
 
 	def Comer(self,objeto):
-		print "Comi"
-#		self.comer=1
-		self.fish_img_curr = self.fish_lst[self.Or +self.mov_p][2]		     
-		#time.sleep(0.7)		
+		print "Tiburon: Comi "
+		self.fish_img_curr = self.fish_lst[self.Or +self.mov_p][2]		     	
 		objeto.Die()
 
 	def Die(self):
@@ -216,7 +196,7 @@ class Sharks(threading.Thread,pygame.sprite.Sprite):
 		self._stop.set()
 
 	def run(self):
-		print "Soy Tiburon"
+		print "Tiburon: Soy Tiburon (>_>) "
 		imgTemp=self.shark_img_curr
 		self.shark_img_curr=pygame.image.load("./Images/huevoShark.png").convert_alpha()
 		time.sleep(3)
@@ -230,22 +210,9 @@ class Sharks(threading.Thread,pygame.sprite.Sprite):
 			if colisionShark:
 				if self!=colisionShark[0]:
 					self.Colision(colisionShark[0])
-					print "tiburon con tiburon"
-			# 	print "Colicione, soy tiburon"
+					print "Choque entre tiburon con tiburon"
 
 			time.sleep(0.3)
-
-		# self.Sharks_ListX = []
-		# self.Sharks_ListY = []
-
-		# self.N_fishes_ListX = []
-		# self.N_fishes_ListY = []
-		# print self.N_self.Sharks
-		# for i in range (1,self.N_self.Sharks+1):
-		# 	self.N_self.Sharks_ListX.append( randrange(800) )
-		# for i in range (1,self.N_self.Sharks+1):
-		# 	self.N_self.Sharks_ListY.append(randrange(600))
-		# print self.N_self.Sharks_ListY[1]
 
 		
 
@@ -254,7 +221,7 @@ class Sharks(threading.Thread,pygame.sprite.Sprite):
 	def Draw_Sharks(self):
 		for i in range(1,self.N_self.Sharks) :
 			self.screen.blit( self.Sharks_img[0][0],(self.N_self.Sharks_ListX[i], self.N_self.Sharks_ListY[i] ), self.Shark_area)
-		#pygame.Surface.blit( self.Sharks_img (50,50))
+		
 
 	
 

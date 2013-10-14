@@ -2,14 +2,28 @@ import pygame
 import Fishes, Sharks
 import thread
 import time
+import string
 from random import randrange
 	
 
+def read_conf_file():
+		conf = []
+		all=string.maketrans('','')
+		nodigs=all.translate(all, string.digits)
 	
-Sharkslist = []
-Fisheslist = []
+		f = open('configure.txt','r')
+		n=0
+		while 1:
+			line = f.readline()
+			if not line:
+				break
+			conf.append(line.translate(all, nodigs))
+		return conf
+	
+
 
 class Game:
+
 
 	def __init__(self, Shark_n, Fishes_n,w,h): # w = 800, h = 600
 		#Se inicializa pygame
@@ -28,7 +42,8 @@ class Game:
 		#se cargan las imagenes de tiburones y peces
 		self.Sharks_img()
 		self.Fishes_img()
-		
+		self.Sharkslist = []
+		self.Fisheslist = []
 		self.img_pos = 0
 		self.alpha = 128
 		self.Sharks_spri = pygame.sprite.Group()
@@ -41,31 +56,50 @@ class Game:
 	def Collect_sprites(self):
 		# Se vacean las imagenes ya cargadas para ir cargando las demas
 
-		self.Sharks_spri.empty()
-		self.Fishes_spri.empty()
+		#self.Sharks_spri.empty()
+		#self.Fishes_spri.empty()
 		otherlistshark=[]
 
-		for i in range(self.Shark_n):	
-			if Sharkslist[i].alive:
-				otherlistshark.append(Sharkslist[i])
-				self.Sharks_spri.add( Sharkslist[i])
+		for i in range(len(self.Sharkslist)):	
+
+			if self.Sharkslist[i].alive:
+				otherlistshark.append(self.Sharkslist[i])
+				#self.Sharks_spri.add( self.Sharkslist[i])
+
+			if self.Sharkslist[i].alive==False:
+				self.Sharks_spri.remove( self.Sharkslist[i])
 
 		for j in otherlistshark:
 			j.load_sprite(self.Sharks_spri,self.Fishes_spri)
 
 		otherlistfish = []
-		for i in range(self.Fishes_n):
-			if Fisheslist[i].alive:
+		for i in range(len(self.Fisheslist)):
+			if self.Fisheslist[i].alive:
 				
-				otherlistfish.append(Fisheslist[i])
-				self.Fishes_spri.add( Fisheslist[i])
+				otherlistfish.append(self.Fisheslist[i])
+				#self.Fishes_spri.add( self.Fisheslist[i])
+			if self.Fisheslist[i].alive==False:
+				self.Fishes_spri.remove( self.Fisheslist[i])
+
 
 		for j in otherlistfish:
 			j.load_sprite(self.Sharks_spri,self.Fishes_spri)
-				#self.Fishes[i].load_sprite(self.Sharks_spri,self.Fishes_spri)
 				
-		
+				
+	# Funcion para leer el archivo de configuracion
+	def read_conf_file(self):		
+		f = open('configure','r')
+		n=0
+		while 1:
+			line = f.readline()
+			n = n +1
+			print n
+			if not line:
+				break
+			#for i in range(0,20):
+			maze_map.append(line.strip(":"))
 
+		print maze_map[0][1]
 
 	# Funcion para crear las unidades, tanto los peces como los tiburones
 
@@ -87,9 +121,10 @@ class Game:
 				g=0
 			else:
 				g=1
-			x = Sharks.Sharks( self.Retrieve_shark_lst(), randrange(self.Width), randrange(self.Heigth),self.vel,  g,self.Width,self.Heigth)
+			x = Sharks.Sharks( self.Retrieve_shark_lst(), randrange(self.Width), randrange(self.Heigth),self.vel,  g,self.Width,self.Heigth,self)
 			#MODIFICADO
-			Sharkslist.append(x)
+			self.Sharkslist.append(x)
+			self.Sharks_spri.add( self.Sharkslist[-1])
 
 		
 		for i in range (Fishes_n):
@@ -98,10 +133,11 @@ class Game:
 			else:
 				g=1
 
-			y = Fishes.Fishes(self.Retrieve_fish_lst(), randrange(self.Width),randrange(self.Heigth), self.vel, g,self.Width,self.Heigth)
+			y = Fishes.Fishes(self.Retrieve_fish_lst(), randrange(self.Width),randrange(self.Heigth), self.vel, g,self.Width,self.Heigth,self)
 
 			#MODIFICADO
-			Fisheslist.append(y)
+			self.Fisheslist.append(y)
+			self.Fishes_spri.add( self.Fisheslist[-1])
 
 
 		self.Collect_sprites()
@@ -109,11 +145,11 @@ class Game:
 		
 		for i in range(Shark_n):
 			#MODIFICADO
-			Sharkslist[i].start()
+			self.Sharkslist[i].start()
 
 		for i in range(Fishes_n):
 			#MODIFICADO
-			Fisheslist[i].start()
+			self.Fisheslist[i].start()
 
 	#Imagenes de los peces
 	# Se cargan las imagenes de los peces, el mismo proceso se repite con los tiburones
@@ -192,7 +228,7 @@ class Game:
 
 
 		self.Shark_lst = [[],[],[],[],[],[],[],[]]
-#	self.Shark_lst = [ self.Sharks_movs_n for i in range(0,3) , self.Sharks_movs_e for i in range(0,3), self.Sharks_movs_s for i in range(0,3), self.Sharks_movs_w for i in range(0,3) ]
+
 		self.Shark_lst = [ list(self.Shark_movs_n_v) , list(self.Shark_movs_e_v), list(self.Shark_movs_s_v), list(self.Shark_movs_w_v),list(self.Shark_movs_n_h) , list(self.Shark_movs_e_h), list(self.Shark_movs_s_h), list(self.Shark_movs_w_h) ]
 
 
@@ -238,22 +274,27 @@ class Game:
 
 		self.Collect_sprites()
 
-		for i in range(self.Shark_n):	
-			if Sharkslist[i].alive == True:
+		for i in range(len(self.Sharkslist)):	
+			if self.Sharkslist[i].alive == True:
 				#MODIFICADO
-				self.screen.blit( Sharkslist[i].get_curr_img() ,(Sharkslist[i].X, Sharkslist[i].Y ))
+				self.screen.blit( self.Sharkslist[i].get_curr_img() ,(self.Sharkslist[i].X, self.Sharkslist[i].Y ))
 
 
-		for j in range(self.Fishes_n):
-			if Fisheslist[j].alive == True:
-				self.screen.blit( Fisheslist[j].get_curr_img() ,(Fisheslist[j].X, Fisheslist[j].Y ))
+		for j in range(len(self.Fisheslist)):
+			if self.Fisheslist[j].alive == True:
+				self.screen.blit( self.Fisheslist[j].get_curr_img() ,(self.Fisheslist[j].X, self.Fisheslist[j].Y ))
 
 	
 
 def main():
-	juego = Game(10,40,800,600) #Se recibe 1er parametro la cantidad de tiburones y 2do cantidad de peces,
+	conf = read_conf_file()
+	
+	juego = Game(int(conf[0]),int(conf[1]),int(conf[2]),int(conf[3])) #Se recibe 1er parametro la cantidad de tiburones y 2do cantidad de peces,
 				   # 3er y 4to parametro son anchura y altura
-
+	print "Configuracion inicial:"
+	print 'Tiburones : %d | Peces : %d | Anchura %d px | Altura %d px' % (int(conf[0]), int( conf[1]), int (conf[2]), int(conf[3]))
+	time.sleep(4)
+	
 	while True: # Loop, el juego se ejecuta dentro de esta clausura
 
 		for event in pygame.event.get():
@@ -267,8 +308,8 @@ def main():
 			for i in colisiones:
 				for j in i:
 					j.Die()
-				#print i
-			print "Pez Choco Con tiburon"
+				
+			print "Pez choco con tiburon"
 		pygame.display.update()
 
 if __name__ == "__main__":
