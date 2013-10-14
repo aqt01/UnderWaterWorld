@@ -10,11 +10,8 @@ import time
 class Sharks(threading.Thread,pygame.sprite.Sprite):
 	# recibe lista de tiburiones, posicion, velocidad y genero
 	def __init__(self,shark_lst,X,Y,vel,genre,X_max,Y_max,game):
-<<<<<<< HEAD
-=======
 #		self.Sharks_path = filename
 		#threading.Thread.__init__(self)
->>>>>>> 796eaa98be0e5990bd4de1c1dc8d418f508df7fc
 		super(Sharks, self).__init__()
 		self._stop = threading.Event()
 		pygame.sprite.Sprite.__init__(self)
@@ -31,10 +28,7 @@ class Sharks(threading.Thread,pygame.sprite.Sprite):
 		self.type="shark"
 		self.die =0
 		self.TenerHijos=True
-<<<<<<< HEAD
-=======
 		#game.Collect_sprites()
->>>>>>> 796eaa98be0e5990bd4de1c1dc8d418f508df7fc
 		self.Y_max_limit = Y_max		
 		self.X_max_limit = X_max
 		self.Y_min_limit = 0
@@ -180,11 +174,8 @@ class Sharks(threading.Thread,pygame.sprite.Sprite):
 
 	def Reproducir(self):
 		if self.TenerHijos==True:
-<<<<<<< HEAD
 			print "Tiburon: Me reproduje"
-=======
 			print "Me reproduje"
->>>>>>> 796eaa98be0e5990bd4de1c1dc8d418f508df7fc
 			X=self.X 
 			Y= self.Y+15
 			g=randrange(2)
@@ -193,11 +184,8 @@ class Sharks(threading.Thread,pygame.sprite.Sprite):
 			self.game.Sharks_spri.add( self.game.Sharkslist[-1])
 			self.game.Sharkslist[-1].start()
 			self.TenerHijos=False
-<<<<<<< HEAD
 		
-=======
 		#shark.start()
->>>>>>> 796eaa98be0e5990bd4de1c1dc8d418f508df7fc
 
 	def Comer(self,objeto):
 		print "Tiburon: Comi "

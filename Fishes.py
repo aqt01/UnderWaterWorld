@@ -160,11 +160,8 @@ class Fishes(threading.Thread, pygame.sprite.Sprite):
 	def Reproducir(self):
 
 		if self.TenerHijos==True:
-<<<<<<< HEAD
 			print "Pez: Tuve un hijo! :)"
-=======
 			print "Me reproduje"
->>>>>>> 796eaa98be0e5990bd4de1c1dc8d418f508df7fc
 			X=self.X 
 			Y= self.Y +15
 			g=randrange(2)
