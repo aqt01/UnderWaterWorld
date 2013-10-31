@@ -16,3 +16,18 @@ a) si son del mismo sexo y de la misma especie, uno aniquila al otro.
 b) si son de especies diferentes, el tiburón siempre aniquila al pez.
 c) si son de la misma especie y de distinto sexo, se reproducen, 
 generando un nuevoindividuo cuyo sexo será macho o hembra con igual probabilidad, y luego continúan su camino.
+
+Nota:
+
+ configure.txt: Contiene la configuración sobre la cantidad de peces, tiburones y la configuración de las dimensiones
+ de la ventana.
+
+Librerías:
+
+ Pyinstaller (para hacer el build) : http://www.pyinstaller.org/
+ Pygame 1.9.1: 
+
+Para ejecutar en linux, debe tener instalado pygame y solo tiene que "python game.py"
+
+By: 
+Aqt01 and Juan23 (https://github.com/Juan23) 
